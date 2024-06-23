@@ -1,32 +1,63 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import Product from "@/components/Product";
+import { initMongoose } from "@/lib/mongoose";
+import { useState } from "react";
+import { findAllProducts } from "./api/products";
+import Footer from "@/components/Footer";
+import Layout from "@/components/Layout";
 
-const inter = Inter({ subsets: ["latin"] });
+export default function Home({ products }) {
+  const [phrase, setPhrase] = useState("");
+  const categoryNames = [...new Set(products.map((p) => p.category))];
 
-export default function Home() {
+  if (phrase)
+    products = products.filter((p) =>
+      p.name.toLowerCase().includes(phrase.toLowerCase())
+    );
+
   return (
-    <div className="p-5">
+    <Layout>
+      <input
+        value={phrase}
+        onChange={(e) => setPhrase(e.target.value)}
+        type="text"
+        placeholder="Seach for products..."
+        className="bg-neutral-300 rounded-xl w-full h-10 px-3 my-5"
+      />
       <div>
-        <h2 className="text-3xl font-bold">Mobiles</h2>
-        <div className="p-5 bg-blue-100 rounded-xl">
-          <img src="/products/iphone.png" alt="iphone 14 pro" />
-        </div>
-        <div>
-          <h3 className="font-bold mt-1">Iphone 14 Pro</h3>
-        </div>
-        <p className="text-sm leading-4 mt-1">
-          Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit.
-          Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit.
-          Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit.
-        </p>
-        <div className="flex mt-2">
-          <div className="text-2xl font-bold grow">$899</div>
-          <button className="bg-emerald-400 text-white py-1 px-1 rounded-lg">Add to cart</button>
-        </div>
+        {categoryNames.map((categoryName) => (
+          <div key={categoryName}>
+            {products.find((p) => p.category === categoryName) && (
+              <div>
+                <h2 className="text-3xl font-bold capitalize">
+                  {categoryName}
+                </h2>
+                <div className="flex -mx-5 overflow overflow-x-scroll scrollbar-hide snap-x">
+                  {products
+                    .filter((p) => p.category === categoryName)
+                    .map((product) => (
+                      <div
+                        key={product.name}
+                        className="m-5 py-3 px-3 snap-start"
+                      >
+                        <Product product={product} />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </div>
+    </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  await initMongoose();
+  const products = await findAllProducts();
+  return {
+    props: {
+      products: JSON.parse(JSON.stringify(products)),
+    },
+  };
 }
