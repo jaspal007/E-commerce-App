@@ -3,10 +3,9 @@ import { ProductContext } from "./ProductContext"
 
 export default function Product({product}){
   const id = product._id;
-  const {setSelectedProducts, setTotalCost} = useContext(ProductContext)
+  const {setSelectedProducts} = useContext(ProductContext)
   function addProduct(){
     setSelectedProducts(prev=>[...prev, id]);
-    setTotalCost(prev=> prev+=product.price);
   }
     return(
         <div className="max-w-xl min-w-52">
