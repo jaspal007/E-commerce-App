@@ -2,7 +2,6 @@ import Product from "@/components/Product";
 import { initMongoose } from "@/lib/mongoose";
 import { useState } from "react";
 import { findAllProducts } from "./api/products";
-import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
 export default function Home({ products }) {

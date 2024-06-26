@@ -7,5 +7,11 @@ export async function findAllProducts(){
 
 export default async function handler(req, res) {
   await initMongoose();
-  res.json(await findAllProducts());
+  const {ids} = req.query;
+  if(ids){
+    const idsArray = ids.split(',');
+    res.json(await Product.find({'_id': {$in:idsArray}}))
+  }else{
+    res.json(await findAllProducts());
+  }
 }

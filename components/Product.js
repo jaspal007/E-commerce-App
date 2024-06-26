@@ -3,13 +3,14 @@ import { ProductContext } from "./ProductContext"
 
 export default function Product({product}){
   const id = product._id;
-  const {setSelectedProducts} = useContext(ProductContext)
+  const {setSelectedProducts, setTotalCost} = useContext(ProductContext)
   function addProduct(){
     setSelectedProducts(prev=>[...prev, id]);
+    setTotalCost(prev=> prev+=product.price);
   }
     return(
         <div className="max-w-xl min-w-52">
-            <div className="p-5 bg-blue-100 rounded-xl">
+            <div className="p-5 bg-blue-100 rounded-xl shrink-0">
         <img src={product.image} alt={product._id}/>
       </div>
       <div>
