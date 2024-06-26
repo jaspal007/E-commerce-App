@@ -5,8 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   await initMongoose();
-  const signingSecret =
-    "whsec_64255c635497749ac8e1511f828314c1882bed88d19f76161f43962ec0dd791d";
+  const signingSecret = "stripe cli signing secret";
   const payload = await buffer(req);
   const signature = req.headers["stripe-signature"];
 
